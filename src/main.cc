@@ -34,7 +34,7 @@ void schedule_key(bitset<64>& round_key, const string& key, uint8_t round)
         key_segments[segment] = (segment + 1) % 2 == 0 ? ca.step(102) : ca.step(60);
     }
 
-    bitset<80> merged = concat<20>(key_segments[0], key_segments[1], key_segments[2], key_segments[3]);
+    bitset<80> merged = concat4<20>(key_segments[0], key_segments[1], key_segments[2], key_segments[3]);
 
     bool even = round % 2 == 0;
     unsigned limit = even ? whole.size() : 64;
@@ -60,22 +60,22 @@ uint64_t encrypt(uint64_t plaintext, const char* key)
         }
     }
 
-    bitset<64> evolved_plaintext = concat<16>(segments[0], segments[1], segments[2], segments[3]);
+    bitset<64> encrypted = concat4<16>(segments[0], segments[1], segments[2], segments[3]);
 
     for (unsigned round = 1; round <= 15; round++) {
         bitset<64> scheduled_key;
         schedule_key(scheduled_key, key, round);
-        evolved_plaintext ^= scheduled_key;
+        encrypted ^= scheduled_key;
 
-        CA<evolved_plaintext.size()> ca_reversible(evolved_plaintext);
+        CA<encrypted.size()> ca_reversible(encrypted);
         // Confusion of XORd result with reversible rules
         ca_reversible.step(170);
         ca_reversible.step(204);
         ca_reversible.step(15);
-        evolved_plaintext = ca_reversible.state();
+        encrypted = ca_reversible.state();
     }
 
-    return evolved_plaintext.to_ulong();
+    return encrypted.to_ulong();
 }
 
 uint64_t decrypt(uint64_t encrypted, const char* key)
@@ -109,7 +109,7 @@ uint64_t decrypt(uint64_t encrypted, const char* key)
     }
 
     // Concatenate 4-bit sections
-    return concat4(segments[0], segments[1], segments[2], segments[3], segments[4], segments[5], segments[6],
+    return concat16(segments[0], segments[1], segments[2], segments[3], segments[4], segments[5], segments[6],
                    segments[7], segments[8], segments[9], segments[10], segments[11], segments[12],
                    segments[13], segments[14], segments[15])
         .to_ulong();
