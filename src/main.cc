@@ -24,22 +24,17 @@ void schedule_key(bitset<64>& round_key, const string& key, uint8_t round)
     }
 
     // Divide key into 20 bit sections
-    vector<bitset<20>> A(4);
+    vector<bitset<20>> key_segments(4);
     for (unsigned i = 0; i < 4; i++)
         for (unsigned j = 0; j < 20; j++)
-            A[i][j] = whole[(i * 20) + j];
+            key_segments[i][j] = whole[i * 20 + j];
 
-    for (unsigned i = 0; i < A.size(); i++) {
-        CA<20> ca(A[i]);
-
-        if ((i + 1) % 2 == 0) {
-            A[i] = ca.step(102);
-        } else {
-            A[i] = ca.step(60);
-        }
+    for (unsigned segment = 0; segment < key_segments.size(); segment++) {
+        CA<20> ca(key_segments[segment]);
+        key_segments[segment] = (segment + 1) % 2 == 0 ? ca.step(102) : ca.step(60);
     }
 
-    bitset<80> merged = concat<20>(A[0], A[1], A[2], A[3]);
+    bitset<80> merged = concat<20>(key_segments[0], key_segments[1], key_segments[2], key_segments[3]);
 
     bool even = round % 2 == 0;
     unsigned limit = even ? whole.size() : 64;
@@ -95,7 +90,6 @@ uint64_t decrypt(uint64_t encrypted, const char* key)
     bitset<64> encrypted_bits(encrypted);
 
     for (int round = 15; round >= 1; round--) {
-
         bitset<64> scheduled_key;
         schedule_key(scheduled_key, key, round);
         encrypted_bits ^= scheduled_key;
@@ -109,18 +103,19 @@ uint64_t decrypt(uint64_t encrypted, const char* key)
 
     // Divide plaintext into 16 4 bit segments
     vector<bitset<4>> segments(16);
-
     for (unsigned i = 0; i < segments.size(); i++)
         for (size_t j = 0; j < segments[0].size(); j++)
-            segments[i][j] = encrypted_bits[(i * 4) + j];
+            segments[i][j] = encrypted_bits[i * 4 + j];
 
     for (unsigned i = 1; i <= 4; i++) {
         for (unsigned segment = 0; segment <= segments.size(); segment++) {
             CA<4> ca(segments[segment], BOUNDARY_ZERO);
-            segments[segment] = ((segment + 1) % 2 == 0) ? ca.step(51) : ca.step(153);
+            // Run rule 153 for odd sections and 51 for even
+            segments[segment] = (segment + 1) % 2 == 0 ? ca.step(51) : ca.step(153);
         }
     }
 
+    // Concatenate 4-bit sections
     return concat4(segments[0], segments[1], segments[2], segments[3], segments[4], segments[5], segments[6],
                    segments[7], segments[8], segments[9], segments[10], segments[11], segments[12],
                    segments[13], segments[14], segments[15])
