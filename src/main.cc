@@ -56,14 +56,7 @@ uint64_t encrypt(uint64_t plaintext, const char* key)
     for (unsigned i = 0; i < 4; i++) {
         for (unsigned segment = 0; segment < segments.size(); segment++) {
             CA<16> ca(segments[segment]);
-
-            if ((segment + 1) % 2 == 0) {
-                ca.step(51);
-            } else {
-                ca.step(153);
-            }
-
-            segments[segment] = ca.state();
+            segments[segment] = (segment + 1) % 2 == 0 ? ca.step(51) : ca.step(153);
         }
     }
 
