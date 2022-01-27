@@ -1,0 +1,11 @@
+cmake_minimum_required(VERSION 3.18)
+project(caencryption LANGUAGES CXX C)
+
+set(CMAKE_CXX_STANDARD 20)
+if (MSVC)
+    add_compile_options(/W4 /WX)
+else()
+    add_compile_options(-Wall -pedantic )
+endif()
+
+add_subdirectory(src)
