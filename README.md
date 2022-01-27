@@ -1,4 +1,4 @@
-# caencryptiono
+# caencryption
 
 Encryption algorithm using elementary cellular automata.
 
