@@ -4,7 +4,7 @@ Alleged encryption algorithm using elementary cellular automata. Reference paper
 
 ## Errata (thus far, need to fix alternating blocks)
 
-* There are unspecified CA boundaries
+* There are unspecified CA boundaries (implementation should be correct as I'm getting half the plaintext out)
 * Selected rule 204 is essentially a NOP
 * 16x4 bit split in decryption should be 4x6
     * Correct in diagram (figure 3), not algorithm listing (figure 3 in paper, which is 4x16)
