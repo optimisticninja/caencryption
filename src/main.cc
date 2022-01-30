@@ -10,6 +10,12 @@
 
 using namespace std;
 
+/** Paper WTFs:
+ *
+ *  - Rule 204 is a NOP
+ *  - 16x4 bit sections should be 4x16 bit sections
+ */
+
 uint64_t schedule_key(const bitset<80>& key_material)
 {
     bitset<64> round_key;
@@ -49,7 +55,7 @@ uint64_t encrypt(uint64_t plaintext, uint64_t key)
 
     bitset<64> p2 = concat4<16>(segments[0], segments[1], segments[2], segments[3]);
 
-    for (unsigned round = 1; round <= 15; round++) {
+    for (unsigned round = 0; round < 15; round++) {
         uint64_t round_key = schedule_key(key);
         p2 ^= round_key;
         ElementaryCA<64> ca(p2);
@@ -63,28 +69,25 @@ uint64_t encrypt(uint64_t plaintext, uint64_t key)
 
 uint64_t decrypt(uint64_t ciphertext, uint64_t key)
 {
-    for (unsigned round = 1; round <= 15; round++) {
-        ciphertext ^= key;
+    for (unsigned round = 0; round < 15; round++) {
+        uint64_t round_key = schedule_key(key);
+        ciphertext ^= round_key;
         ElementaryCA<64> ca(ciphertext);
         ciphertext = ca.step(240).to_ulong();
         ciphertext = ca.step(204).to_ulong();
         ciphertext = ca.step(85).to_ulong();
     }
 
-    vector<bitset<4>> segments = split<64, 4, 16>(ciphertext);
+    vector<bitset<16>> segments = split<64, 16, 4>(ciphertext);
 
     for (unsigned round = 0; round < 4; round++) {
         for (unsigned segment = 0; segment < segments.size(); segment++) {
-            ElementaryCA<4> ca(segments[segment], BOUNDARY_ZERO);
-            segments[segment] = (segment % 2 == 0) ? ca.step(51) : ca.step(153);
+            ElementaryCA<16> ca(segments[segment], BOUNDARY_ZERO);
+            segments[segment] = (segment % 2 != 0) ? ca.step(51) : ca.step(153);
         }
     }
 
-    // Concatenate 4-bit sections
-    return concat16(segments[0], segments[1], segments[2], segments[3], segments[4], segments[5], segments[6],
-                    segments[7], segments[8], segments[9], segments[10], segments[11], segments[12],
-                    segments[13], segments[14], segments[15])
-        .to_ulong();
+    return concat4(segments[0], segments[1], segments[2], segments[3]).to_ulong();
 }
 
 int main()
@@ -95,6 +98,7 @@ int main()
     uint64_t key = schedule_key(key_material);
     uint64_t ciphertext = encrypt(plaintext, key);
     uint64_t decrypted = decrypt(ciphertext, key);
+
     cout << "P: " << hex << plaintext << endl;
     cout << "K: " << hex << key << endl;
     cout << "E: " << hex << ciphertext << endl;

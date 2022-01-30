@@ -1,11 +1,14 @@
 # caencryption
 
-Alleged encryption algorithm using elementary cellular automata.
+Alleged encryption algorithm using elementary cellular automata. Reference paper has many errors.
 
-* Either the paper is erroneous or my implementation is. You be the judge.
-  * There are unspecified CA boundaries
-  * No visual confirmation of the ordering of CA rules/selected rules
-  * A weird 16x4 bit split evolution that doesn't match the diagram (figure 3 in paper, which is 4x16)
+## Errata (thus far, need to fix alternating blocks)
+
+* There are unspecified CA boundaries
+* Selected rule 204 is essentially a NOP
+* 16x4 bit split in decryption should be 4x6
+    * Correct in diagram (figure 3), not algorithm listing (figure 3 in paper, which is 4x16)
+* Decryption needs to invert the even/odd segment check
 
 # References
 
