@@ -1,4 +1,4 @@
-# caencryption
+# caencryption (in development, working out kinks from paper)
 
 Encryption algorithm using elementary cellular automata.
 

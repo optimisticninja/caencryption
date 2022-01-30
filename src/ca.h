@@ -8,7 +8,7 @@ using namespace std;
 
 typedef enum { BOUNDARY_PERIODIC, BOUNDARY_ZERO } boundary_t;
 
-template<size_t StateSize> class CA
+template<size_t StateSize> class ElementaryCA
 {
   private:
     bitset<StateSize> _state;
@@ -37,7 +37,7 @@ template<size_t StateSize> class CA
     }
 
   public:
-    CA(const bitset<StateSize>& state, boundary_t boundary = BOUNDARY_PERIODIC)
+    ElementaryCA(const bitset<StateSize>& state, boundary_t boundary = BOUNDARY_PERIODIC)
         : _state(state), boundary(boundary)
     {
         bitset<3> neighborhood(3);
