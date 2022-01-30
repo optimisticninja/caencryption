@@ -5,21 +5,6 @@
 
 using namespace ::testing;
 
-TEST(Concat, Concat16)
-{
-    bitset<64> expected = 0xDEADBEEFCAFEBABE;
-    // Divide plaintext into 16 4 bit segments
-    vector<bitset<4>> segments(16);
-    for (unsigned i = 0; i < segments.size(); i++)
-        for (size_t j = 0; j < segments[0].size(); j++)
-            segments[i][j] = expected[i * 4 + j];
-
-    uint64_t actual = concat16<4>(segments[0], segments[1], segments[2], segments[3], segments[4], segments[5], segments[6],
-                   segments[7], segments[8], segments[9], segments[10], segments[11], segments[12],
-                   segments[13], segments[14], segments[15]).to_ulong();
-    ASSERT_EQ(expected.to_ulong(), actual);
-}
-
 
 TEST(Concat, Concat4_16)
 {
