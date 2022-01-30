@@ -1,6 +1,6 @@
 # caencryption
 
-Alleged encryption algorithm using elementary cellular automata. Reference paper has many errors.
+Alleged encryption algorithm using elementary cellular automata. Reference paper has errors.
 
 ## Errata (thus far, need to fix alternating blocks)
 
