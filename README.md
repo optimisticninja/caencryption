@@ -15,11 +15,33 @@ DECRYPTED: deadbeefcafebabe
 
 **Key Scheduling**
 
+![rule 60](img/scheduling/60.png)
+
+![rule 102](img/scheduling/102.png)
+
 **Encryption**
+
+![rule 15](img/encrypt/15.png)
+
+![rule 170](img/encrypt/170.png)
 
 **Decryption**
 
-**Common**
+![rule 85](img/encrypt/15.png)
+
+![rule 240](img/encrypt/204.png)
+
+**Common (encryption and decryption)**
+
+In encryption/decryption round rule chains
+
+![rule 204](img/encrypt/204.png)
+
+For diffusion
+
+![rule 29](img/common/29.png)
+
+![rule 51](img/common/51.png)
 
 ## Errata from paper
 

@@ -7,7 +7,7 @@
 
 using namespace ::testing;
 
-static const auto WOLFRAM_START_STATE = 0b1111111111111110111111111111111;
+static const auto WOLFRAM_START_STATE = 0b0000000000000001000000000000000;
 
 /**
  * Write state history to image file using state over time
@@ -45,14 +45,14 @@ void write_pgm(const vector<bitset<31>>& state_history, int rule,
 void test_rule(unsigned rule)
 {
     bitset<31> state = WOLFRAM_START_STATE;
-    ElementaryCA<31> ca(state, BOUNDARY_ZERO);
+    ElementaryCA<31> ca(state);
     vector<bitset<31>> history;
     history.push_back(state);
 
     for (auto epochs = 0; epochs < 15; epochs++)
         history.push_back(ca.step(rule));
 
-    write_pgm(history, rule, "inverted");
+    write_pgm(history, rule);
 }
 
 TEST(CA, Rules)
