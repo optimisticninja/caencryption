@@ -27,9 +27,9 @@ DECRYPTED: deadbeefcafebabe
 
 **Decryption**
 
-![rule 85](img/encrypt/15.png)
+![rule 85](img/encrypt/85.png)
 
-![rule 240](img/encrypt/204.png)
+![rule 240](img/encrypt/240.png)
 
 **Common (encryption and decryption)**
 
