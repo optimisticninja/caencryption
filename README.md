@@ -27,15 +27,15 @@ DECRYPTED: deadbeefcafebabe
 
 **Decryption**
 
-![rule 85](img/encrypt/85.png)
+![rule 85](img/decrypt/85.png)
 
-![rule 240](img/encrypt/240.png)
+![rule 240](img/decrypt/240.png)
 
 **Common (encryption and decryption)**
 
 In encryption/decryption round rule chains
 
-![rule 204](img/encrypt/204.png)
+![rule 204](img/common/204.png)
 
 For diffusion
 
