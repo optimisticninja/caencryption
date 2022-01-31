@@ -1,6 +1,6 @@
 # caencryption
 
-Elementary CA-based encryption algorithm using elementary cellular automata. Reference paper has errors.
+Elementary CA-based encryption algorithm based on paper in references. Reference paper has errors, this is my identification and fixing of errata.
 
 ## Output of implementation
 
