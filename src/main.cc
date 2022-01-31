@@ -10,12 +10,6 @@
 
 using namespace std;
 
-/** Paper WTFs:
- *
- *  - Rule 204 is a NOP
- *  - 16x4 bit sections should be 4x16 bit sections
- */
-
 uint64_t schedule_key(const bitset<80>& key_material)
 {
     bitset<64> round_key;
@@ -49,7 +43,7 @@ uint64_t encrypt(uint64_t plaintext, uint64_t key)
     for (unsigned round = 0; round < 4; round++) {
         for (unsigned segment = 0; segment < segments.size(); segment++) {
             ElementaryCA<16> ca(segments[segment], BOUNDARY_ZERO);
-            segments[segment] = (segment % 2 == 0) ? ca.step(51) : ca.step(153);
+            segments[segment] = (segment % 2 == 0) ? ca.step(51) : ca.step(29);
         }
     }
 
@@ -83,7 +77,7 @@ uint64_t decrypt(uint64_t ciphertext, uint64_t key)
     for (unsigned round = 0; round < 4; round++) {
         for (unsigned segment = 0; segment < segments.size(); segment++) {
             ElementaryCA<16> ca(segments[segment], BOUNDARY_ZERO);
-            segments[segment] = (segment % 2 != 0) ? ca.step(51) : ca.step(153);
+            segments[segment] = (segment % 2 != 0) ? ca.step(51) : ca.step(29);
         }
     }
 
@@ -99,8 +93,8 @@ int main()
     uint64_t ciphertext = encrypt(plaintext, key);
     uint64_t decrypted = decrypt(ciphertext, key);
 
-    cout << "P: " << hex << plaintext << endl;
-    cout << "K: " << hex << key << endl;
-    cout << "E: " << hex << ciphertext << endl;
-    cout << "D: " << hex << decrypted << endl;
+    cout << "PLAINTEXT: " << hex << plaintext << endl;
+    cout << "KEY      : " << hex << key << endl;
+    cout << "ENCRYPTED: " << hex << ciphertext << endl;
+    cout << "DECRYPTED: " << hex << decrypted << endl;
 }
